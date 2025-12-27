@@ -10,3 +10,9 @@ variable "kb_s3_bucket_name" {
 variable "embedding_model_id" {
   type = string
 }
+
+variable "kb_id" {
+  description = "Knowledge Base ID (created manually via console)"
+  type        = string
+  default     = ""
+}

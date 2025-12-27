@@ -13,9 +13,14 @@ variable "project_name" {
 variable "kb_s3_bucket_name" {
   type        = string
   description = "Existing bucket for compliance docs (optional)"
-  default     = ""
+  default     = "compliance-copilot-kb-docs"
 }
 
+variable "kb_id" {
+  type        = string
+  description = "Knowledge Base ID"
+  default     = "GEY4CRP1FJ"
+}
 variable "foundation_model_id" {
   type        = string
   description = "Bedrock FM for Q&A"

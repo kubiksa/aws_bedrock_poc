@@ -11,20 +11,20 @@ module "bedrock_kb" {
 }
 
 # 2) Agent wired to the KB
-module "bedrock_agent" {
-  source = "./modules/bedrock_agent"
+# module "bedrock_agent" {
+#   source = "./modules/bedrock_agent"
 
-  project_name       = var.project_name
-  foundation_model_id = var.foundation_model_id
-  kb_id              = module.bedrock_kb.kb_id
-}
+#   project_name       = var.project_name
+#   foundation_model_id = var.foundation_model_id
+#   kb_id              = module.bedrock_kb.kb_id
+# }
 
 # 3) Lambda + API that calls the Agent
-module "api_lambda" {
-  source = "./modules/api_lambda"
+# module "api_lambda" {
+#   source = "./modules/api_lambda"
 
-  project_name   = var.project_name
-  agent_id       = module.bedrock_agent.agent_id
-  agent_alias_id = module.bedrock_agent.agent_alias_id
-  region         = data.aws_region.current.name
-}
+#   project_name   = var.project_name
+#   agent_id       = module.bedrock_agent.agent_id
+#   agent_alias_id = module.bedrock_agent.agent_alias_id
+#   region         = data.aws_region.current.name
+# }
