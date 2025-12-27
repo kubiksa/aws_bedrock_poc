@@ -17,7 +17,7 @@ resource "aws_iam_role" "agent_role" {
           "aws:SourceAccount" = data.aws_caller_identity.current.account_id
         }
         ArnLike = {
-          "aws:SourceArn" = "arn:aws:bedrock:${data.aws_region.current}:${data.aws_caller_identity.current.account_id}:agent/*"
+          "aws:SourceArn" = "arn:aws:bedrock:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:agent/*"
         }
       }
     }]
@@ -39,7 +39,7 @@ resource "aws_iam_role_policy" "agent_model_policy" {
         Action = [
           "bedrock:InvokeModel"
         ]
-        Resource = "arn:aws:bedrock:${data.aws_region.current}::foundation-model/${var.foundation_model_id}"
+        Resource = "arn:aws:bedrock:${data.aws_region.current.region}::foundation-model/${var.foundation_model_id}"
       }
     ]
   })
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy" "agent_kb_policy" {
         Action = [
           "bedrock:Retrieve"
         ]
-        Resource = "arn:aws:bedrock:${data.aws_region.current}:${data.aws_caller_identity.current.account_id}:knowledge-base/${var.kb_id}"
+        Resource = "arn:aws:bedrock:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:knowledge-base/${var.kb_id}"
       }
     ]
   })
@@ -97,7 +97,7 @@ resource "null_resource" "prepare_agent" {
   }
 
   provisioner "local-exec" {
-    command = "aws bedrock-agent prepare-agent --agent-id ${aws_bedrockagent_agent.agent.id} --region ${data.aws_region.current}"
+    command = "aws bedrock-agent prepare-agent --agent-id ${aws_bedrockagent_agent.agent.id} --region ${data.aws_region.current.region}"
   }
 
   depends_on = [

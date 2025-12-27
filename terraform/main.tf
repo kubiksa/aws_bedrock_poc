@@ -19,11 +19,11 @@ module "bedrock_agent" {
 }
 
 # 3) Lambda + API that calls the Agent
-module "api_lambda" {
-  source = "./modules/api_lambda"
+# module "api_lambda" {
+#   source = "./modules/api_lambda"
 
-  project_name   = var.project_name
-  agent_id       = module.bedrock_agent.agent_id
-  agent_alias_id = module.bedrock_agent.agent_alias_id
-  region         = data.aws_region.current
-}
+#   project_name   = var.project_name
+#   agent_id       = module.bedrock_agent.agent_id
+#   agent_alias_id = module.bedrock_agent.agent_alias_id
+#   region         = data.aws_region.current.region
+# }
