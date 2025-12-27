@@ -39,7 +39,12 @@ resource "aws_iam_role_policy" "agent_model_policy" {
         Action = [
           "bedrock:InvokeModel"
         ]
-        Resource = "arn:aws:bedrock:${data.aws_region.current.region}::foundation-model/${var.foundation_model_id}"
+        Resource = [
+          # Inference profiles (for Nova, Claude with profiles)
+          "arn:aws:bedrock:${data.aws_region.current.region}::inference-profile/*",
+          # Direct model access (fallback)
+          "arn:aws:bedrock:${data.aws_region.current.region}::foundation-model/*"
+        ]
       }
     ]
   })
@@ -97,7 +102,20 @@ resource "null_resource" "prepare_agent" {
   }
 
   provisioner "local-exec" {
-    command = "aws bedrock-agent prepare-agent --agent-id ${aws_bedrockagent_agent.agent.id} --region ${data.aws_region.current.region}"
+    command = <<-EOT
+      echo "Waiting for agent to be ready..."
+      sleep 60
+      
+      echo "Preparing agent..."
+      aws bedrock-agent prepare-agent \
+        --agent-id ${aws_bedrockagent_agent.agent.id} \
+        --region ${data.aws_region.current.region}
+      
+      echo "Waiting for prepare to complete..."
+      sleep 30
+      
+      echo "Agent prepared successfully"
+    EOT
   }
 
   depends_on = [
@@ -105,11 +123,33 @@ resource "null_resource" "prepare_agent" {
   ]
 }
 
-# Agent Alias (for versioning and invocation)
+# Agent Alias - created AFTER agent is prepared
 resource "aws_bedrockagent_agent_alias" "agent_alias" {
   agent_alias_name = "live"
   agent_id         = aws_bedrockagent_agent.agent.id
   description      = "Production alias for agent"
 
+  # Wait for prepare to finish
   depends_on = [null_resource.prepare_agent]
+  
+  # Add lifecycle to prevent recreation on every apply
+  lifecycle {
+    create_before_destroy = false
+  }
+}
+
+# Additional wait after alias creation
+resource "null_resource" "wait_for_alias" {
+  triggers = {
+    alias_id = aws_bedrockagent_agent_alias.agent_alias.agent_alias_id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo "Waiting for alias to be fully ready..."
+      sleep 15
+    EOT
+  }
+
+  depends_on = [aws_bedrockagent_agent_alias.agent_alias]
 }

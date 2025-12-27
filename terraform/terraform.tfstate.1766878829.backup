@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.14.3",
-  "serial": 73,
+  "serial": 69,
   "lineage": "cb251674-343b-81ee-e721-b900f43fcb18",
   "outputs": {
     "agent_id": {
@@ -72,6 +72,130 @@
           },
           "sensitive_attributes": [],
           "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "module": "module.bedrock_agent",
+      "mode": "managed",
+      "type": "aws_bedrockagent_agent",
+      "name": "agent",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "agent_arn": "arn:aws:bedrock:us-west-2:015355410250:agent/BBCRBSSIPW",
+            "agent_collaboration": "DISABLED",
+            "agent_id": "BBCRBSSIPW",
+            "agent_name": "compliance-copilot-agent",
+            "agent_resource_role_arn": "arn:aws:iam::015355410250:role/compliance-copilot-agent-role",
+            "agent_version": null,
+            "customer_encryption_key_arn": null,
+            "description": "Compliance copilot agent for water utilities",
+            "foundation_model": "us.amazon.nova-lite-v1:0",
+            "guardrail_configuration": null,
+            "id": "BBCRBSSIPW",
+            "idle_session_ttl_in_seconds": 600,
+            "instruction": "You are a helpful compliance assistant for water and wastewater utilities.\nUse the knowledge base to answer questions about regulations, standards, and compliance requirements.\nAlways cite sources from the knowledge base when providing answers.\nIf you don't find relevant information in the knowledge base, say so clearly.\n",
+            "memory_configuration": null,
+            "prepare_agent": true,
+            "prepared_at": "2025-12-27T23:31:56Z",
+            "prompt_override_configuration": [
+              {
+                "override_lambda": null,
+                "prompt_configurations": null
+              }
+            ],
+            "region": "us-west-2",
+            "skip_resource_in_use_check": false,
+            "tags": null,
+            "tags_all": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.aws_iam_role_policy.agent_kb_policy",
+            "module.bedrock_agent.aws_iam_role_policy.agent_model_policy",
+            "module.bedrock_agent.data.aws_caller_identity.current",
+            "module.bedrock_agent.data.aws_region.current"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.bedrock_agent",
+      "mode": "managed",
+      "type": "aws_bedrockagent_agent_alias",
+      "name": "agent_alias",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "agent_alias_arn": "arn:aws:bedrock:us-west-2:015355410250:agent-alias/BBCRBSSIPW/Z3KIZEQL4J",
+            "agent_alias_id": "Z3KIZEQL4J",
+            "agent_alias_name": "live",
+            "agent_id": "BBCRBSSIPW",
+            "description": "Production alias for agent",
+            "id": "Z3KIZEQL4J,BBCRBSSIPW",
+            "region": "us-west-2",
+            "routing_configuration": [
+              {
+                "agent_version": "3",
+                "provisioned_throughput": null
+              }
+            ],
+            "tags": null,
+            "tags_all": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "module.bedrock_agent.aws_bedrockagent_agent.agent",
+            "module.bedrock_agent.aws_bedrockagent_agent_knowledge_base_association.kb_assoc",
+            "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.aws_iam_role_policy.agent_kb_policy",
+            "module.bedrock_agent.aws_iam_role_policy.agent_model_policy",
+            "module.bedrock_agent.data.aws_caller_identity.current",
+            "module.bedrock_agent.data.aws_region.current",
+            "module.bedrock_agent.null_resource.prepare_agent"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.bedrock_agent",
+      "mode": "managed",
+      "type": "aws_bedrockagent_agent_knowledge_base_association",
+      "name": "kb_assoc",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "agent_id": "BBCRBSSIPW",
+            "agent_version": "DRAFT",
+            "description": "Compliance documentation knowledge base",
+            "id": "BBCRBSSIPW,DRAFT,GEY4CRP1FJ",
+            "knowledge_base_id": "GEY4CRP1FJ",
+            "knowledge_base_state": "ENABLED",
+            "region": "us-west-2",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "module.bedrock_agent.aws_bedrockagent_agent.agent",
+            "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.aws_iam_role_policy.agent_kb_policy",
+            "module.bedrock_agent.aws_iam_role_policy.agent_model_policy",
+            "module.bedrock_agent.data.aws_caller_identity.current",
+            "module.bedrock_agent.data.aws_region.current"
+          ]
         }
       ]
     },
@@ -183,6 +307,36 @@
           "private": "bnVsbA==",
           "dependencies": [
             "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.data.aws_caller_identity.current",
+            "module.bedrock_agent.data.aws_region.current"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.bedrock_agent",
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "prepare_agent",
+      "provider": "provider[\"registry.terraform.io/hashicorp/null\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "4049501754767572619",
+            "triggers": {
+              "agent_id": "BBCRBSSIPW",
+              "kb_id": "GEY4CRP1FJ"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "module.bedrock_agent.aws_bedrockagent_agent.agent",
+            "module.bedrock_agent.aws_bedrockagent_agent_knowledge_base_association.kb_assoc",
+            "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.aws_iam_role_policy.agent_kb_policy",
+            "module.bedrock_agent.aws_iam_role_policy.agent_model_policy",
             "module.bedrock_agent.data.aws_caller_identity.current",
             "module.bedrock_agent.data.aws_region.current"
           ]

@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.14.3",
-  "serial": 73,
+  "serial": 72,
   "lineage": "cb251674-343b-81ee-e721-b900f43fcb18",
   "outputs": {
     "agent_id": {
@@ -183,6 +183,36 @@
           "private": "bnVsbA==",
           "dependencies": [
             "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.data.aws_caller_identity.current",
+            "module.bedrock_agent.data.aws_region.current"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.bedrock_agent",
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "prepare_agent",
+      "provider": "provider[\"registry.terraform.io/hashicorp/null\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "4049501754767572619",
+            "triggers": {
+              "agent_id": "BBCRBSSIPW",
+              "kb_id": "GEY4CRP1FJ"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "module.bedrock_agent.aws_bedrockagent_agent.agent",
+            "module.bedrock_agent.aws_bedrockagent_agent_knowledge_base_association.kb_assoc",
+            "module.bedrock_agent.aws_iam_role.agent_role",
+            "module.bedrock_agent.aws_iam_role_policy.agent_kb_policy",
+            "module.bedrock_agent.aws_iam_role_policy.agent_model_policy",
             "module.bedrock_agent.data.aws_caller_identity.current",
             "module.bedrock_agent.data.aws_region.current"
           ]

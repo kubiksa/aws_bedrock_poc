@@ -24,7 +24,7 @@ variable "kb_id" {
 variable "foundation_model_id" {
   type        = string
   description = "Bedrock FM for Q&A"
-  default     = "amazon.nova-lite-v1:0" # or another cheap model
+  default     = "anthropic.claude-3-5-sonnet-20241022-v2:0" # us.amazon.nova-lite-v1:0 wouldn't work
 }
 
 variable "embedding_model_id" {
