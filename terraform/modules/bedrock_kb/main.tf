@@ -65,7 +65,7 @@ resource "aws_iam_role_policy" "kb_policy" {
           "s3vectors:QueryVectors"
         ]
         Resource = [
-          "arn:aws:s3vectors:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:bucket/*"
+          "arn:aws:s3vectors:${data.aws_region.current}:${data.aws_caller_identity.current.account_id}:bucket/*"
         ]
       },
       # Bedrock model access
@@ -74,7 +74,7 @@ resource "aws_iam_role_policy" "kb_policy" {
         Action = [
           "bedrock:InvokeModel"
         ]
-        Resource = "arn:aws:bedrock:${data.aws_region.current.name}::foundation-model/${var.embedding_model_id}"
+        Resource = "arn:aws:bedrock:${data.aws_region.current}::foundation-model/${var.embedding_model_id}"
       }
     ]
   })
